@@ -3,7 +3,7 @@ const router   = express.Router();
 const mongoose = require('mongoose');
 const forge    = require('node-forge');
 
-// ── schemas ───────────────────────────────────────────────────────
+// ── schemas 
 
 const CandidateSchema = new mongoose.Schema({
   // Fields from the candidate registration database
@@ -54,10 +54,10 @@ const Candidate      = mongoose.model('Candidate',      CandidateSchema);
 const Vote           = mongoose.model('Vote',           VoteSchema);
 const PollingStation = mongoose.model('PollingStation', StationSchema);
 
-// ── Fernet decrypt ────────────────────────────────────────────────
+// ── Fernet decrypt 
 function decryptPreferences(encryptedText) {
   try {
-    const keyBytes      = Buffer.from(process.env.FRIEND_ENCRYPTION_KEY, 'base64');
+    const keyBytes      = Buffer.from(process.env.VOTE_ENCRYPTION_KEY || process.env.FRIEND_ENCRYPTION_KEY, 'base64');
     const encryptionKey = keyBytes.slice(16, 32);
 
     const tokenBuf = Buffer.from(
@@ -83,7 +83,7 @@ function decryptPreferences(encryptedText) {
   }
 }
 
-// ── party colors ──────────────────────────────────────────────────
+// ── party colors 
 function getPartyColor(partyName) {
   const colors = {
     "National People's Power":     "#A91D62",
@@ -97,7 +97,7 @@ function getPartyColor(partyName) {
   return colors[partyName] || "#666666";
 }
 
-// ── aggregate votes ───────────────────────────────────────────────
+// aggregate votes 
 async function aggregateVotes(pollingStationFilter = null) {
   const candidates = await Candidate.find({});
   const voteQuery  = pollingStationFilter
@@ -156,7 +156,7 @@ for (const c of candidates) {
   }));
 }
 
-// ── GET /api/votes/centers ────────────────────────────────────────
+// GET /api/votes/centers
 router.get('/centers', async (req, res) => {
   try {
     const stations = await PollingStation.find({});
@@ -170,7 +170,7 @@ router.get('/centers', async (req, res) => {
   }
 });
 
-// ── GET /api/votes/overall ────────────────────────────────────────
+//  GET /api/votes/overall 
 router.get('/overall', async (req, res) => {
   try {
     const candidates = await aggregateVotes();
@@ -188,7 +188,7 @@ router.get('/overall', async (req, res) => {
   }
 });
 
-// ── GET /api/votes/center/:centerId ──────────────────────────────
+//  GET /api/votes/center/:centerId 
 router.get('/center/:centerId', async (req, res) => {
   try {
     const station = await PollingStation.findById(req.params.centerId);
@@ -213,7 +213,7 @@ router.get('/center/:centerId', async (req, res) => {
   }
 });
 
-// ── GET /api/votes/stream?centerId=xxx ───────────────────────────
+//  GET /api/votes/stream?centerId=xxx 
 router.get('/stream', async (req, res) => {
   res.setHeader('Content-Type',  'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');

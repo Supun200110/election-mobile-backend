@@ -11,7 +11,7 @@ const CenterVoteSchema = new mongoose.Schema({
   updatedAt:     { type: Date,   default: Date.now },
 });
 
-// compound index — one record per candidate per center
+
 CenterVoteSchema.index({ centerId: 1, candidateId: 1 }, { unique: true });
 
 module.exports = mongoose.model('CenterVote', CenterVoteSchema);
