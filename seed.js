@@ -36,15 +36,15 @@ function randomVotes(centerId) {
 
 async function seed() {
   await mongoose.connect(process.env.VOTE_MONGO_URI || process.env.MONGO_URI);
-  console.log('✅ Connected to MongoDB\n');
+  console.log(' Connected to MongoDB\n');
 
   await CenterVote.deleteMany({});
-  console.log('🗑️  Cleared old data\n');
+  console.log('  Cleared old data\n');
 
   const docs = [];
 
   for (const center of centers) {
-    console.log(`📍 Seeding: ${center.centerName}`);
+    console.log(` Seeding: ${center.centerName}`);
     for (const candidate of candidates) {
       const votes = randomVotes(center.centerId);
       docs.push({
@@ -62,7 +62,7 @@ async function seed() {
   }
 
   await CenterVote.insertMany(docs);
-  console.log(`✅ Inserted ${docs.length} records (${centers.length} centers × ${candidates.length} candidates)`);
+  console.log(` Inserted ${docs.length} records (${centers.length} centers × ${candidates.length} candidates)`);
   mongoose.disconnect();
 }
 

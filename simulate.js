@@ -7,7 +7,7 @@ const CenterVote = require('./models/vote');
 
 async function simulate() {
   await mongoose.connect(process.env.VOTE_MONGO_URI || process.env.MONGO_URI);
-  console.log('🗳️  Vote simulator started...\n');
+  console.log(' Vote simulator started...\n');
 
   setInterval(async () => {
     const all    = await CenterVote.find();
